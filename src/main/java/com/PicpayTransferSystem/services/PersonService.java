@@ -19,10 +19,7 @@ public class PersonService implements  IPersonService {
 
     @Override
     public Long createNewPerson(PersonDTO personDTO) {
-        var personEntity = new PersonEntity();
-        personEntity.setDocument(personDTO.getDocument());
-        personEntity.setEmail(personDTO.getEmail());
-        personEntity.setFullName(personDTO.getFullName());
+        var personEntity = new PersonEntity(personDTO);
         personRepository.save(personEntity);
 
         accountService.createNewAccount(personEntity, personDTO.getSaldoinicial());

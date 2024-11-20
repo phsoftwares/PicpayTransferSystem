@@ -1,13 +1,15 @@
 package com.PicpayTransferSystem.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.PicpayTransferSystem.dtos.TransactionDTO;
+import com.PicpayTransferSystem.dtos.TransactionInputDTO;
+import com.PicpayTransferSystem.dtos.TransactionOutputDTO;
+import com.PicpayTransferSystem.enums.TransactionCodeConst;
+import com.PicpayTransferSystem.externalDTOS.PicPayAuthorizationDTO;
 import com.PicpayTransferSystem.interfaces.ITransactionService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class TransactionService implements ITransactionService {
@@ -16,20 +18,31 @@ public class TransactionService implements ITransactionService {
     private RestTemplate restTemplate;
 
     @Override
-    public void createTransaction(TransactionDTO transactionDTO) {
-
+    public TransactionOutputDTO createTransaction(TransactionInputDTO transactionDTO) {
+        var response = new TransactionOutputDTO();
         if (getAuthorizationTransaction()) {
-            
+
         } else {
-            throw new UnsupportedOperationException("Transaction not authorized.'");
+            response.setTransactionCode(TransactionCodeConst.UnauthorizedTransaction);
+            response.setMessage("Unauthorized transaction.");
+            response.setSuccess(false);
         }
+        return response;
     }
 
     private Boolean getAuthorizationTransaction() {
         var url = "https://util.devi.tools/api/v2/authorize";
-        var authorizationReponse = restTemplate.getForEntity(url, String.class);
+        var authorizationResponse = restTemplate.getForEntity(url, String.class);
 
-        return authorizationReponse.getStatusCode() == HttpStatus.OK;
+        var objectMapper = new ObjectMapper();
+        PicPayAuthorizationDTO response;
+        try {
+            response = objectMapper.readValue(authorizationResponse.getBody(), PicPayAuthorizationDTO.class);
+            return response.getData().getAuthorization();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }     
     }
 
     

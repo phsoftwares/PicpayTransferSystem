@@ -1,7 +1,8 @@
 package com.PicpayTransferSystem.interfaces;
 
-import com.PicpayTransferSystem.dtos.TransactionDTO;
+import com.PicpayTransferSystem.dtos.TransactionInputDTO;
+import com.PicpayTransferSystem.dtos.TransactionOutputDTO;
 
 public interface ITransactionService {
-    void createTransaction(TransactionDTO transactionDTO);
+    TransactionOutputDTO createTransaction(TransactionInputDTO transactionDTO);
 }

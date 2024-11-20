@@ -1,5 +1,7 @@
 package com.PicpayTransferSystem.services;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +16,8 @@ public class AccountService implements IAccountService {
     private AccountRepository accountRepository;
 
     @Override
-    public void createNewAccount(PersonEntity personEntity, double initialBalance) {
-        var accountEntity = new AccountEntity();
-        accountEntity.setOutputValue(0.0);
-        accountEntity.setInputValue(0.0);
-        accountEntity.setInitialBalance(initialBalance);
+    public void createNewAccount(PersonEntity personEntity, BigDecimal initialBalance) {
+        var accountEntity = new AccountEntity(personEntity, initialBalance);
         accountEntity.setPerson(personEntity);
 
         accountRepository.save(accountEntity);

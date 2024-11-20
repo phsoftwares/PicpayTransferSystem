@@ -1,7 +1,5 @@
 package com.PicpayTransferSystem.dtos;
 
-import com.PicpayTransferSystem.enums.TransactionCodeEnum;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,9 +8,9 @@ import lombok.Setter;
 public class TransactionOutputDTO {
     private Boolean success;
     private String message;
-    private TransactionCodeEnum transactionCode;
+    private int transactionCode;
 
-    public TransactionOutputDTO(Boolean success, String message, TransactionCodeEnum transactionCode) {
+    public TransactionOutputDTO(Boolean success, String message, int transactionCode) {
         this.message = message;
         this.transactionCode = transactionCode;
         this.success = success;

@@ -3,9 +3,9 @@ package com.PicpayTransferSystem.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.PicpayTransferSystem.consts.RabbitMQConst;
 import com.PicpayTransferSystem.interfaces.INotifyService;
 import com.PicpayTransferSystem.interfaces.IRabbitMQService;
-import com.consts.RabbitMQConst;
 
 @Service
 public class NotifyService implements INotifyService{

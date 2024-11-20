@@ -1,10 +1,10 @@
-package com.consumers;
+package com.PicpayTransferSystem.consumers;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.consts.RabbitMQConst;
+import com.PicpayTransferSystem.consts.RabbitMQConst;
 
 @Component
 public class NotifyConsumer {

@@ -38,19 +38,19 @@ public class TransactionService implements ITransactionService {
         if (getAuthorizationTransaction()) {
            var accountBalance = accountService.getBalanceByPersonId(transactionDTO.getIdPayer());
            if (checkBalance(accountBalance)) {
-            return new TransactionOutputDTO(false, "Insufficient balance.", TransactionCodeEnum.InsufficientBalance);
+            return new TransactionOutputDTO(false, "Insufficient balance.", TransactionCodeEnum.InsufficientBalance.getCode());
            } 
 
            if (!accountService.executeTransaction(transactionDTO)) {
-            return new TransactionOutputDTO(false, "Problem when making the transaction.", TransactionCodeEnum.ProblemWhenMakingTheTransaction);
+            return new TransactionOutputDTO(false, "Problem when making the transaction.", TransactionCodeEnum.ProblemWhenMakingTheTransaction.getCode());
            }
            saveTransaction(transactionDTO);
 
            notifyService.sendNotification();
 
-           return new TransactionOutputDTO(true, "Successful transaction.", TransactionCodeEnum.SuccessfulTransaction);
+           return new TransactionOutputDTO(true, "Successful transaction.", TransactionCodeEnum.SuccessfulTransaction.getCode());
         }
-        return new TransactionOutputDTO(false, "Unauthorized transaction.", TransactionCodeEnum.UnauthorizedTransaction);
+        return new TransactionOutputDTO(false, "Unauthorized transaction.", TransactionCodeEnum.UnauthorizedTransaction.getCode());
     }
 
     private Boolean getAuthorizationTransaction() {

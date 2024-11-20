@@ -1,4 +1,4 @@
-package com.consts;
+package com.PicpayTransferSystem.consts;
 
 public class RabbitMQConst {
 

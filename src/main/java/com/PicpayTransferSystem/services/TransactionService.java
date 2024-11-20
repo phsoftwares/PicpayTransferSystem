@@ -73,7 +73,7 @@ public class TransactionService implements ITransactionService {
 
     private void saveTransaction(TransactionInputDTO transactionDTO) {
         var payeeEntity = personService.getById(transactionDTO.getIdPayee());
-        var payerEntity = personService.getById(transactionDTO.getIdPayee());
+        var payerEntity = personService.getById(transactionDTO.getIdPayer());
         var transactionEntity = new TransactionEntity(transactionDTO.getValue(), payeeEntity, payerEntity);
 
         transactionRepository.save(transactionEntity);

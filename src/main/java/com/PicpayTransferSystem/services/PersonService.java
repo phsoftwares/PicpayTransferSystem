@@ -22,8 +22,14 @@ public class PersonService implements  IPersonService {
         var personEntity = new PersonEntity(personDTO);
         personRepository.save(personEntity);
 
-        accountService.createNewAccount(personEntity, personDTO.getSaldoinicial());
+        accountService.createNewAccount(personEntity, personDTO.getInitialBalance());
         return personEntity.getId();
+    }
+
+    @Override
+    public PersonEntity getById(Long personId) {
+        var personEntity = personRepository.findById(personId);
+        return personEntity.get();
     }
     
 }

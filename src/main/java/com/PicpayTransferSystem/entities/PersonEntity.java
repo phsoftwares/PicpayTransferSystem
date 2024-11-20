@@ -24,14 +24,16 @@ public class PersonEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @Column(name = "full_name", nullable = false)
     private String fullName;
 
-    @Column(unique=true)
+    @Column(name = "email", unique=true)
     private String email;
 
-    @Column(unique=true)
+    @Column(name = "document", unique=true)
     private String document;
 
+    @Column(name = "creation_datetime", nullable = false) 
     private LocalDateTime creationDateTime;
 
     public PersonEntity(PersonDTO data){
@@ -39,5 +41,9 @@ public class PersonEntity {
         this.fullName = data.getFullName();
         this.email = data.getEmail();
         this.creationDateTime = LocalDateTime.now();
+    }
+
+    public PersonEntity(){
+        
     }
 }

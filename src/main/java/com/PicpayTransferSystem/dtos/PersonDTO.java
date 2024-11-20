@@ -11,5 +11,5 @@ public class PersonDTO {
     private String fullName;
     private String email; 
     private String document;
-    private BigDecimal saldoinicial;
+    private BigDecimal initialBalance;
 }

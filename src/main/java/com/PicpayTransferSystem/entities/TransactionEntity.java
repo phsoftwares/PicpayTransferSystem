@@ -3,6 +3,7 @@ package com.PicpayTransferSystem.entities;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,15 +25,24 @@ public class TransactionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;    
 
+    @Column(name = "transaction_value", nullable = false) 
     private BigDecimal transactionValue; 
     
     @ManyToOne
-    @JoinColumn(name="idPayee")
+    @JoinColumn(name="id_payee")
     private PersonEntity payee;
 
     @ManyToOne
-    @JoinColumn(name="idPayer")
+    @JoinColumn(name="id_payer")
     private PersonEntity payer;
 
+    @Column(name = "creation_datetime", nullable = false) 
     private LocalDateTime creationDateTime;
+
+    public TransactionEntity(BigDecimal transactionValue, PersonEntity payee, PersonEntity payer) {
+        this.transactionValue = transactionValue;
+        this.payee = payee;
+        this.payer = payer;
+        this.creationDateTime = LocalDateTime.now();
+    }
 }

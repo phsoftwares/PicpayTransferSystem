@@ -47,7 +47,10 @@ public class AuthorizationServiceTest {
     @Test
     @DisplayName("Should get transaction authorization failed")
     public void testGetAuthorizationTransactionFailure() throws Exception {
-        when(restTemplate.getForEntity(anyString(), eq(String.class))).thenThrow(new RuntimeException("Error"));
+        var jsonResponse = "{\"status\": \"success\", \"data\": {\"authorization\": false}}";
+
+        var responseEntity = ResponseEntity.ok(jsonResponse);
+        when(restTemplate.getForEntity(anyString(), eq(String.class))).thenReturn(responseEntity);
 
         var authorization = authorizationService.getAuthorizationTransaction();
 

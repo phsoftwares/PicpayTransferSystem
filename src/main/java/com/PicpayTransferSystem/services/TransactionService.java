@@ -4,19 +4,16 @@ import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
 import com.PicpayTransferSystem.dtos.TransactionInputDTO;
 import com.PicpayTransferSystem.dtos.TransactionOutputDTO;
 import com.PicpayTransferSystem.entities.TransactionEntity;
 import com.PicpayTransferSystem.enums.TransactionCodeEnum;
-import com.PicpayTransferSystem.externalDTOS.PicPayAuthorizationDTO;
 import com.PicpayTransferSystem.interfaces.IAccountService;
+import com.PicpayTransferSystem.interfaces.IAuthorizationService;
 import com.PicpayTransferSystem.interfaces.INotifyService;
 import com.PicpayTransferSystem.interfaces.IPersonService;
 import com.PicpayTransferSystem.interfaces.ITransactionService;
 import com.PicpayTransferSystem.repositories.TransactionRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class TransactionService implements ITransactionService {
@@ -30,12 +27,15 @@ public class TransactionService implements ITransactionService {
     @Autowired  
     private INotifyService notifyService;
 
+    @Autowired  
+    private IAuthorizationService authorizationService;
+
     @Autowired
     private TransactionRepository transactionRepository;
 
     @Override
     public TransactionOutputDTO createTransaction(TransactionInputDTO transactionDTO) {
-        if (getAuthorizationTransaction()) {
+        if (authorizationService.getAuthorizationTransaction()) {
            var accountBalance = accountService.getBalanceByPersonId(transactionDTO.getIdPayer());
            if (checkBalance(accountBalance)) {
             return new TransactionOutputDTO(false, "Insufficient balance.", TransactionCodeEnum.InsufficientBalance.getCode());
@@ -51,20 +51,6 @@ public class TransactionService implements ITransactionService {
            return new TransactionOutputDTO(true, "Successful transaction.", TransactionCodeEnum.SuccessfulTransaction.getCode());
         }
         return new TransactionOutputDTO(false, "Unauthorized transaction.", TransactionCodeEnum.UnauthorizedTransaction.getCode());
-    }
-
-    private Boolean getAuthorizationTransaction() {
-        var url = "https://util.devi.tools/api/v2/authorize";
-        var restTemplate = new RestTemplate();
-        var objectMapper = new ObjectMapper();
-        try {
-            var authorizationResponse = restTemplate.getForEntity(url, String.class);
-            var response = objectMapper.readValue(authorizationResponse.getBody(), PicPayAuthorizationDTO.class);
-            return response.getData().getAuthorization();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }     
     }
 
     private Boolean checkBalance(BigDecimal balance) {

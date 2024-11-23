@@ -37,7 +37,7 @@ public class TransactionService implements ITransactionService {
     public TransactionOutputDTO createTransaction(TransactionInputDTO transactionDTO) {
         if (authorizationService.getAuthorizationTransaction()) {
            var accountBalance = accountService.getBalanceByPersonId(transactionDTO.getIdPayer());
-           if (checkBalance(accountBalance)) {
+           if (checkBalance(accountBalance, transactionDTO.getValue())) {
             return new TransactionOutputDTO(false, "Insufficient balance.", TransactionCodeEnum.InsufficientBalance.getCode());
            } 
 
@@ -53,8 +53,8 @@ public class TransactionService implements ITransactionService {
         return new TransactionOutputDTO(false, "Unauthorized transaction.", TransactionCodeEnum.UnauthorizedTransaction.getCode());
     }
 
-    private Boolean checkBalance(BigDecimal balance) {
-        return (balance.compareTo(BigDecimal.ZERO) <= 0);
+    private Boolean checkBalance(BigDecimal balance, BigDecimal transactionValue) {
+        return (balance.compareTo(transactionValue) <= 0);
     }
 
     private void saveTransaction(TransactionInputDTO transactionDTO) {

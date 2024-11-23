@@ -46,4 +46,11 @@ public class PersonEntity {
     public PersonEntity(){
         
     }
+
+    public PersonEntity(String document, String fullName, String email){
+        this.document = document;
+        this.fullName = fullName;
+        this.email = email;
+        this.creationDateTime = LocalDateTime.now();    
+    }
 }

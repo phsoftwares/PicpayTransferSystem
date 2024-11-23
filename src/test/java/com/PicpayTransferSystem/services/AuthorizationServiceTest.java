@@ -30,7 +30,6 @@ public class AuthorizationServiceTest {
 
     @BeforeEach
     public void setUp() {
-        // Inicializando os mocks
         MockitoAnnotations.openMocks(this);
     }
 

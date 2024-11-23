@@ -45,13 +45,13 @@ public class TransactionServiceTest {
     @InjectMocks
     private TransactionService transactionService;
 
-    private TransactionInputDTO transactionDTO;
+    private TransactionInputDTO transactionInputDTO;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        transactionDTO = new TransactionInputDTO(1L, 2L, new BigDecimal("100.00"));
+        transactionInputDTO = new TransactionInputDTO(1L, 2L, new BigDecimal("100.00"));
     }
 
     @Test
@@ -61,12 +61,12 @@ public class TransactionServiceTest {
         var payeeEntity = new PersonEntity("111.111.111-22", "Julia Sousa", "julia.soua@terra.com.br");
 
         when(authorizationService.getAuthorizationTransaction()).thenReturn(true);
-        when(accountService.getBalanceByPersonId(transactionDTO.getIdPayer())).thenReturn(new BigDecimal("200.00"));
-        when(accountService.executeTransaction(transactionDTO)).thenReturn(true);
-        when(personService.getById(transactionDTO.getIdPayer())).thenReturn(payerEntity);
-        when(personService.getById(transactionDTO.getIdPayee())).thenReturn(payeeEntity);
+        when(accountService.getBalanceByPersonId(transactionInputDTO.getIdPayer())).thenReturn(new BigDecimal("200.00"));
+        when(accountService.executeTransaction(transactionInputDTO)).thenReturn(true);
+        when(personService.getById(transactionInputDTO.getIdPayer())).thenReturn(payerEntity);
+        when(personService.getById(transactionInputDTO.getIdPayee())).thenReturn(payeeEntity);
 
-        var response = transactionService.createTransaction(transactionDTO);
+        var response = transactionService.createTransaction(transactionInputDTO);
 
         assertTrue(response.getSuccess());
         assertEquals("Successful transaction.", response.getMessage());
@@ -80,9 +80,9 @@ public class TransactionServiceTest {
     @DisplayName("Should return an error when trying to create the transaction due to insufficient balance")
     public void testCreateTransactionInsufficientBalance() {
         when(authorizationService.getAuthorizationTransaction()).thenReturn(true);
-        when(accountService.getBalanceByPersonId(transactionDTO.getIdPayer())).thenReturn(new BigDecimal("50.00"));
+        when(accountService.getBalanceByPersonId(transactionInputDTO.getIdPayer())).thenReturn(new BigDecimal("50.00"));
 
-        var response = transactionService.createTransaction(transactionDTO);
+        var response = transactionService.createTransaction(transactionInputDTO);
 
         assertFalse(response.getSuccess());
         assertEquals("Insufficient balance.", response.getMessage());
@@ -93,7 +93,7 @@ public class TransactionServiceTest {
     public void testCreateTransactionAuthorizationFailed() {
         when(authorizationService.getAuthorizationTransaction()).thenReturn(false);
 
-        var response = transactionService.createTransaction(transactionDTO);
+        var response = transactionService.createTransaction(transactionInputDTO);
 
         assertFalse(response.getSuccess());
         assertEquals("Unauthorized transaction.", response.getMessage());
@@ -103,10 +103,10 @@ public class TransactionServiceTest {
     @DisplayName("Should return an error when creating the transaction due to problem persisting in the database")
     public void testCreateTransactionProblemWhenMakingTransaction() {
         when(authorizationService.getAuthorizationTransaction()).thenReturn(true);
-        when(accountService.getBalanceByPersonId(transactionDTO.getIdPayer())).thenReturn(new BigDecimal("200.00"));
-        when(accountService.executeTransaction(transactionDTO)).thenReturn(false);
+        when(accountService.getBalanceByPersonId(transactionInputDTO.getIdPayer())).thenReturn(new BigDecimal("200.00"));
+        when(accountService.executeTransaction(transactionInputDTO)).thenReturn(false);
 
-        TransactionOutputDTO response = transactionService.createTransaction(transactionDTO);
+        TransactionOutputDTO response = transactionService.createTransaction(transactionInputDTO);
 
         assertFalse(response.getSuccess());
         assertEquals("Problem when making the transaction.", response.getMessage());

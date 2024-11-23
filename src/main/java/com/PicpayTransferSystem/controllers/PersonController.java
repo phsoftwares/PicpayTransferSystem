@@ -26,7 +26,7 @@ public class PersonController {
         }
         var personEntity = personService.createNewPerson(personDTO);
         
-        return ResponseEntity.status(HttpStatus.CREATED).body(personEntity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(personEntity.getId());
     }
 
 }

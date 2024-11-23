@@ -18,12 +18,12 @@ public class PersonService implements  IPersonService {
     private IAccountService accountService;
 
     @Override
-    public Long createNewPerson(PersonDTO personDTO) {
+    public PersonEntity createNewPerson(PersonDTO personDTO) {
         var personEntity = new PersonEntity(personDTO);
         personRepository.save(personEntity);
 
         accountService.createNewAccount(personEntity, personDTO.getInitialBalance());
-        return personEntity.getId();
+        return personEntity;
     }
 
     @Override

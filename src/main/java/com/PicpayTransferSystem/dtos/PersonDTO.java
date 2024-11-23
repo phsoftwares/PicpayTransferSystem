@@ -12,4 +12,11 @@ public class PersonDTO {
     private String email; 
     private String document;
     private BigDecimal initialBalance;
+
+    public PersonDTO(String fullName, String email, String document, BigDecimal initialBalance){
+        this.fullName = fullName;
+        this.document = document;
+        this.email = email;
+        this.initialBalance = initialBalance;
+    }
 }
